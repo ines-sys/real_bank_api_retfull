@@ -1,0 +1,46 @@
+CREATE DATABASE real_bank;
+
+-- CONNECT TO THE DATA BASE
+\c real_bank;
+
+-- CREATE TABLES
+CREATE TABLE clientes (
+	id SERIAL PRIMARY KEY,
+	nombre VARCHAR(255) NOT NULL,
+	apellido VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE certificados (
+	id SERIAL PRIMARY KEY,
+	cliente_id INTEGER REFERENCES clientes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	balance DECIMAL(10, 2) NOT NULL,
+	fecha_emision DATE NOT NULL,
+	fecha_vencimiento DATE NOT NULL
+);
+
+-- INICIAL DATA
+INSERT INTO clientes (nombre, apellido) VALUES
+	('INES', 'MONTERO'),
+	('MARIA', 'CONCEPCION'),
+	('JOSE', 'PEREZ'),
+	('ALBERTO', 'SUAREZ'),
+	('JUAN', 'GONZALES'),
+	('ABIGAIL', 'RODRIGUEZ'),
+	('ISABELA', 'REYES'),
+	('SEBASTIAN', 'DIAZ'),
+	('ALEXANDER', 'ROSARIO'),
+	('ENMANUEL', 'LOPEZ');
+
+INSERT INTO certificados (cliente_id, balance, fecha_emision, fecha_vencimiento) VALUES
+	(1, 100000, '2024-01-01', '2025-01-12'),
+	(1, 300000, '2023-01-10', '2024-01-10'),
+	(2, 400000, '2023-10-20', '2025-01-30'),
+	(3, 500000, '2024-01-09', '2025-06-16'),
+	(4, 600000, '2024-01-09', '2025-01-16'),
+	(5, 720000, '2023-01-09', '2024-01-09'),
+	(5, 100030, '2024-01-04', '2026-04-02'),
+	(6, 950000, '2023-04-20', '2025-08-20'),
+	(7, 200000, '2022-01-10', '2024-01-10'),
+	(8, 654237, '2020-05-16', '2024-03-15'),
+	(9, 789456, '2023-12-20', '2024-09-08'),
+	(10, 963852, '2023-08-01', '2024-04-25');

@@ -1,0 +1,743 @@
+{
+  	"openapi": "3.0.3",
+	"info": {
+		"title": "Real Bank RestFull APIs",
+		"version": "1.0.0",
+		"description": "Listado de APIs creadas para Real Bank por la postulante Inés Montero"
+	},
+	"tags": [
+		{
+			"name": "Cliente",
+			"description": "APIs relacionadas con los clientes"
+		},
+		{
+			"name": "Certificado",
+			"description": "APIs relacionadas con los certificados"
+		},
+		{
+			"name": "Balance y Depósitos",
+			"description": "APIs para consultas sobre balance y depósitos"
+		}
+	],
+  	"paths": {
+		"/cliente/created": {
+		"post": {
+			"tags": ["Cliente"],
+			"summary": "Crear un cliente",
+			"requestBody": {
+			"required": true,
+			"content": {
+				"application/json": {
+				"schema": {
+					"type": "object",
+					"properties": {
+					"nombre": {
+						"type": "string",
+						"description": "Nombre del cliente"
+					},
+					"apellido": {
+						"type": "string",
+						"description": "Apellido del cliente"
+					}
+					},
+					"required": ["nombre", "apellido"]
+				}
+				}
+			}
+			},
+			"responses": {
+				"200": {
+					"description": "Cliente creado exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"body": {
+							"type": "object",
+							"properties": {
+								"cliente": {
+									"type": "object",
+									"properties": {
+										"nombre": {
+										"type": "string",
+										"description": "Nombre del cliente"
+										},
+										"apellido": {
+										"type": "string",
+										"description": "Apellido del cliente"
+										}
+									}
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor",
+					"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"error": {
+								"type": "string",
+								"description": "Error en el servidor"
+								}
+							}
+						}
+					}
+					}
+				}
+			}
+		}
+		},
+		"/cliente/list": {
+		"get": {
+			"tags": ["Cliente"],
+			"summary": "Obtener la lista de clientes",
+			"responses": {
+				"200": {
+					"description": "Lista de clientes obtenida exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer",
+										"description": "ID del cliente"
+									},
+									"nombre": {
+										"type": "string",
+										"description": "Nombre del cliente"
+									},
+									"apellido": {
+										"type": "string",
+										"description": "Apellido del cliente"
+									}
+								},
+								"required": ["id", "nombre", "apellido"]
+							}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al obtener la lista de clientes",
+					"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"error": {
+								"type": "string",
+								"description": "Error en el servidor"
+								}
+							}
+						}
+					}
+					}
+				}
+			}
+		}
+		},
+		"/cliente/update/{id}": {
+		"patch": {
+			"tags": ["Cliente"],
+			"summary": "Actualizar información del cliente",
+			"parameters": [
+				{
+					"name": "id",
+					"in": "path",
+					"required": true,
+					"description": "ID del cliente a actualizar",
+					"schema": {
+					"type": "integer"
+					}
+				}
+			],
+			"requestBody": {
+			"required": true,
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"nombre": {
+								"type": "string",
+								"description": "Nuevo nombre del cliente"
+							},
+							"apellido": {
+								"type": "string",
+								"description": "Nuevo apellido del cliente"
+							}
+						}
+					}
+				}
+			}
+			},
+			"responses": {
+			"200": {
+				"description": "Cliente actualizado exitosamente",
+				"content": {
+				"application/json": {
+					"schema": {
+					"type": "object",
+					"properties": {
+						"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+						},
+						"body": {
+						"type": "object",
+						"properties": {
+							"cliente": {
+							"type": "object",
+							"properties": {
+								"nombre": {
+								"type": "string",
+								"description": "Nombre del cliente actualizado"
+								},
+								"apellido": {
+								"type": "string",
+								"description": "Apellido del cliente actualizado"
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			},
+			"500": {
+				"description": "Error en el servidor al actualizar el cliente",
+				"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+								"type": "string",
+								"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+				}
+			}
+			}
+		}
+		},
+		"/certificado/request": {
+			"post": {
+				"tags": ["Certificado"],
+				"summary": "Solicitar un nuevo certificado, el formato de la fecha debe ser YYYY-MM-DD",
+				"requestBody": {
+				"required": true,
+				"content": {
+					"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+						"cliente_id": {
+							"type": "integer",
+							"description": "ID del cliente para el cual se solicita el certificado"
+						},
+						"balance": {
+							"type": "number",
+							"description": "Balance del certificado"
+						},
+						"fecha_emision": {
+							"type": "string",
+							"format": "date",
+							"description": "Fecha de emisión del certificado (formato: YYYY-MM-DD)"
+						},
+						"fecha_vencimiento": {
+							"type": "string",
+							"format": "date",
+							"description": "Fecha de vencimiento del certificado (formato: YYYY-MM-DD)"
+						}
+						},
+						"required": ["cliente_id", "balance", "fecha_emision", "fecha_vencimiento"]
+					}
+					}
+				}
+				},
+				"responses": {
+				"200": {
+					"description": "Certificado creado exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"body": {
+							"type": "object",
+							"properties": {
+								"certificate": {
+								"type": "object",
+								"properties": {
+									"cliente_id": {
+									"type": "integer",
+									"description": "ID del cliente del certificado"
+									},
+									"balance": {
+									"type": "number",
+									"description": "Balance del certificado"
+									},
+									"fecha_emision": {
+									"type": "string",
+									"format": "date",
+									"description": "Fecha de emisión del certificado"
+									},
+									"fecha_vencimiento": {
+									"type": "string",
+									"format": "date",
+									"description": "Fecha de vencimiento del certificado"
+									}
+								}
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al crear el certificado",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/list": {
+			"get": {
+				"tags": ["Certificado"],
+				"summary": "Obtener la lista de certificados",
+				"responses": {
+				"200": {
+					"description": "Lista de certificados obtenida exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+							"cliente_id": {
+								"type": "integer",
+								"description": "ID del cliente del certificado"
+							},
+							"balance": {
+								"type": "number",
+								"description": "Balance del certificado"
+							},
+							"fecha_emision": {
+								"type": "string",
+								"format": "date",
+								"description": "Fecha de emisión del certificado"
+							},
+							"fecha_vencimiento": {
+								"type": "string",
+								"format": "date",
+								"description": "Fecha de vencimiento del certificado"
+							}
+							},
+							"required": ["cliente_id", "balance", "fecha_emision", "fecha_vencimiento"]
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al obtener la lista de certificados",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/ganancia/{id}": {
+			"get": {
+				"tags": ["Certificado"],
+				"summary": "Obtener y calcular ganancias mensuales para un certificado",
+				"parameters": [
+				{
+					"name": "id",
+					"in": "path",
+					"required": true,
+					"description": "ID del certificado",
+					"schema": {
+					"type": "integer"
+					}
+				}
+				],
+				"responses": {
+				"200": {
+					"description": "Ganancias mensuales del certificado obtenidas exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"body": {
+							"type": "object",
+							"properties": {
+								"certificateMonthlyGainList": {
+								"type": "array",
+								"items": {
+									"type": "number",
+									"description": "Ganancia mensual del certificado"
+								}
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al calcular ganancias mensuales",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/balance/{id}": {
+			"get": {
+				"tags": ["Balance y Depósitos"],
+				"summary": "Obtener y formatear el balance de un certificado",
+				"parameters": [
+				{
+					"name": "id",
+					"in": "path",
+					"required": true,
+					"description": "ID del certificado",
+					"schema": {
+					"type": "integer"
+					}
+				}
+				],
+				"responses": {
+				"200": {
+					"description": "Balance del certificado obtenido y formateado exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"body": {
+							"type": "object",
+							"properties": {
+								"balanceFormat": {
+								"type": "string",
+								"description": "Balance del certificado formateado"
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al obtener el balance del certificado",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/balancecliente/{idcliente}": {
+			"get": {
+				"tags": ["Balance y Depósitos"],
+				"summary": "Obtener y formatear los balances de certificados para un cliente",
+				"parameters": [
+				{
+					"name": "idcliente",
+					"in": "path",
+					"required": true,
+					"description": "ID del cliente",
+					"schema": {
+					"type": "integer"
+					}
+				}
+				],
+				"responses": {
+				"200": {
+					"description": "Balances de certificados para el cliente obtenidos y formateados exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"body": {
+							"type": "object",
+							"properties": {
+								"balances": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+									"id": {
+										"type": "integer",
+										"description": "ID del certificado"
+									},
+									"balance": {
+										"type": "string",
+										"description": "Balance del certificado formateado"
+									}
+									},
+									"required": ["id", "balance"]
+								}
+								}
+							}
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al obtener los balances de certificados para el cliente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/deposito": {
+			"post": {
+				"tags": ["Balance y Depósitos"],
+				"summary": "Agregar un depósito al balance de un certificado",
+				"requestBody": {
+				"required": true,
+				"content": {
+					"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+						"certificateId": {
+							"type": "integer",
+							"description": "ID del certificado al cual se realizará el depósito"
+						},
+						"depositAmount": {
+							"type": "number",
+							"description": "Monto del depósito"
+						}
+						},
+						"required": ["certificateId", "depositAmount"]
+					}
+					}
+				}
+				},
+				"responses": {
+				"200": {
+					"description": "Depósito realizado exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"message": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al realizar el depósito",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		},
+		"/certificado/retiro": {
+			"post": {
+				"tags": ["Balance y Depósitos"],
+				"summary": "Procesar retiro de un certificado",
+				"requestBody": {
+				"required": true,
+				"content": {
+					"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+						"certificateId": {
+							"type": "integer",
+							"description": "ID del certificado del cual se realizará el retiro"
+						},
+						"amountRetreat": {
+							"type": "number",
+							"description": "Monto del retiro"
+						}
+						},
+						"required": ["certificateId", "amountRetreat"]
+					}
+					}
+				}
+				},
+				"responses": {
+				"200": {
+					"description": "Retiro realizado exitosamente",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"mensaje": {
+							"type": "string",
+							"description": "Mensaje de éxito"
+							},
+							"saldo": {
+							"type": "string",
+							"description": "Nuevo saldo del certificado formateado"
+							},
+							"estado": {
+							"type": "string",
+							"description": "Estado del certificado después del retiro"
+							}
+						}
+						}
+					}
+					}
+				},
+				"400": {
+					"description": "Error en la solicitud, el monto a retirar supera la cantidad de saldo en el certificado",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				},
+				"500": {
+					"description": "Error en el servidor al realizar el retiro",
+					"content": {
+					"application/json": {
+						"schema": {
+						"type": "object",
+						"properties": {
+							"error": {
+							"type": "string",
+							"description": "Error en el servidor"
+							}
+						}
+						}
+					}
+					}
+				}
+				}
+			}
+		}
+	}
+}
